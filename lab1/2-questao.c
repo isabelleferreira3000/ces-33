@@ -18,7 +18,7 @@ void delay(int number_of_seconds)
 } 
 
 int main() {    
-    pid_t pid, pid1, pid2;
+    pid_t pid, pid1;
     pid = fork();
     
     if (pid < 0) { /*erro */
@@ -27,15 +27,14 @@ int main() {
     }
     
     if (pid == 0) { /* processo filho */
-        pid2 = fork();
+        pid1 = fork();
 
-        if (pid2 < 0) { /*erro */
+        if (pid1 < 0) { /*erro */
             printf("Fork 2 failed\n");
             return 1;
         }
 
-        if (pid2 == 0) { /* processo neto */
-            pid1=getpid();
+        if (pid1 == 0) { /* processo neto */
             printf("Neto 1 foi criado\n");
 
             int i;
@@ -46,7 +45,8 @@ int main() {
             printf("Neto 1 vai morrer\n");
 
         } else { /* processo filho */
-            pid1=getpid();
+            wait(NULL);
+
             printf("Filho 1 foi criado\n");
 
             int i;
@@ -55,13 +55,10 @@ int main() {
                 delay(1000);
             }
             printf("Filho 1 vai morrer\n");
-
-            wait(NULL);
         }
 
-
     } else { /*processo pai */
-        pid1=getpid();
+        wait(NULL);
 
         int i;
         for(i = 1; i <= 50; i++) {
@@ -69,8 +66,6 @@ int main() {
             delay(2000);
         }
         printf("Processo pai vai morrer\n");
-
-        wait(NULL);
     }
     return 0;
 }
